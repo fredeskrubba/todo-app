@@ -11,16 +11,18 @@ function updateTasks(){
     });
 }
 
-function removeTask(){
-
-}
 function addTask(text){
     const newTask = document.createElement("div");
     const taskGrid = document.createElement("div");
     
     const taskText = document.createElement("p");
     taskText.textContent = text;
-    taskText.classList.add("mr-auto")
+    const textCont = document.createElement("div");
+    textCont.classList.add("mr-auto");
+
+    const editInput = document.createElement("input");
+    editInput.style.display = "none";
+    
     
     const taskEdit = document.createElement("p");
     taskEdit.textContent = "Edit";
@@ -34,7 +36,10 @@ function addTask(text){
     taskGrid.classList.add("container", "flex", "grid-cols-3", "gap-5");
     
     newTask.appendChild(taskGrid);
-    taskGrid.appendChild(taskText);
+
+    textCont.appendChild(taskText);
+    textCont.appendChild(editInput);
+    taskGrid.appendChild(textCont);
     taskGrid.appendChild(taskEdit);
     taskGrid.appendChild(taskRemove);
     taskArray.push(newTask);
@@ -42,6 +47,28 @@ function addTask(text){
     taskRemove.addEventListener("click", (e)=>{
         taskArray.splice(taskArray.indexOf(e.target.parentElement.parentElement), 1);
         updateTasks();
+    });
+    taskEdit.addEventListener("click", ()=>{
+        if (taskEdit.textContent === "Edit"){
+            editInput.style.display = "block";
+            editInput.value = taskText.textContent;
+            taskEdit.textContent = "Confirm";
+            taskText.style.display = "none";
+            editInput.focus();
+        } else {
+            editInput.style.display = "none";
+            taskText.style.display = "block";
+            taskEdit.textContent = "Edit";
+            taskText.textContent = editInput.value;
+        }
+    })
+    window.addEventListener("keydown", (e)=>{
+        if(e.key === "Enter" && document.activeElement === editInput){
+            editInput.style.display = "none";
+            taskText.style.display = "block";
+            taskEdit.textContent = "Edit";
+            taskText.textContent = editInput.value;
+        }
     })
 }
 
@@ -50,3 +77,9 @@ taskAddButton.addEventListener("click", ()=>{
     taskInput.value = "";
 })
 
+window.addEventListener("keydown", (e)=>{
+    if (e.key === "Enter" && taskInput.value !== ""){
+        addTask(taskInput.value);
+        taskInput.value = ""; 
+    }
+})
