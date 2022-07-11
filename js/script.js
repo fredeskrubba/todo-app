@@ -41,6 +41,7 @@ function createTask(text){
 
     newTask.appendChild(taskGrid);
 
+    // test
     textCont.appendChild(taskText);
     textCont.appendChild(editInput);
     taskGrid.appendChild(textCont);
