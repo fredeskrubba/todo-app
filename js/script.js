@@ -2,39 +2,43 @@ const taskInput = document.querySelector("#input-field");
 const taskAddButton = document.querySelector("#add-task-button");
 const container = document.querySelector("#list");
 
-const taskArray = [];
+let taskArray = JSON.parse(localStorage.tasks);
+
 
 function updateTasks(){
     container.innerHTML = "";
+    localStorage.tasks = JSON.stringify(taskArray);
     taskArray.forEach(task => {
-        container.appendChild(task)
+        createTask(task)
     });
 }
 
-function addTask(text){
+updateTasks();
+
+function createTask(text){
     const newTask = document.createElement("div");
     const taskGrid = document.createElement("div");
-    
     const taskText = document.createElement("p");
     taskText.textContent = text;
+
     const textCont = document.createElement("div");
     textCont.classList.add("mr-auto");
 
     const editInput = document.createElement("input");
     editInput.style.display = "none";
-    
-    
+
+
     const taskEdit = document.createElement("p");
     taskEdit.textContent = "Edit";
     taskEdit.classList.add("cursor-pointer");
-    
+
     const taskRemove = document.createElement("p");
     taskRemove.textContent = "Delete";
     taskRemove.classList.add("cursor-pointer");
-    
+
     newTask.classList.add("bg-gray-100", "w-1/2", "p-6", "text-lg", "rounded-lg", "my-5");
     taskGrid.classList.add("container", "flex", "grid-cols-3", "gap-5");
-    
+
     newTask.appendChild(taskGrid);
 
     textCont.appendChild(taskText);
@@ -42,10 +46,11 @@ function addTask(text){
     taskGrid.appendChild(textCont);
     taskGrid.appendChild(taskEdit);
     taskGrid.appendChild(taskRemove);
-    taskArray.push(newTask);
-    updateTasks();
+
+    container.appendChild(newTask);
+
     taskRemove.addEventListener("click", (e)=>{
-        taskArray.splice(taskArray.indexOf(e.target.parentElement.parentElement), 1);
+        taskArray.splice(taskArray.indexOf(e.target.parentElement.firstChild.querySelector("p").textContent), 1);
         updateTasks();
     });
     taskEdit.addEventListener("click", ()=>{
@@ -70,16 +75,19 @@ function addTask(text){
             taskText.textContent = editInput.value;
         }
     })
+
 }
 
 taskAddButton.addEventListener("click", ()=>{
-    addTask(taskInput.value);
+    taskArray.push(taskInput.value)
     taskInput.value = "";
+    updateTasks();
 })
 
 window.addEventListener("keydown", (e)=>{
     if (e.key === "Enter" && taskInput.value !== ""){
-        addTask(taskInput.value);
-        taskInput.value = ""; 
+        taskArray.push(taskInput.value);
+        updateTasks();
+        taskInput.value = "";
     }
 })
