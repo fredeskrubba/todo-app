@@ -5,7 +5,7 @@ const container = document.querySelector("#list");
 
 
 let taskArray;
-if (localStorage.tasks !== undefined || ""){
+if (localStorage.tasks !== undefined || localStorage.tasks !== ""){
     taskArray = JSON.parse(localStorage.tasks);
 } else {
     taskArray = []
