@@ -2,7 +2,7 @@ const taskInput = document.querySelector("#input-field");
 const taskAddButton = document.querySelector("#add-task-button");
 const container = document.querySelector("#list");
 
-localStorage.tasks = [];
+localStorage.tasks = '[]';
 let taskArray = JSON.parse(localStorage.tasks);
 
 
