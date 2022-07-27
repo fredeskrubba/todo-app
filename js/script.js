@@ -2,24 +2,25 @@ const taskInput = document.querySelector("#input-field");
 const taskAddButton = document.querySelector("#add-task-button");
 const container = document.querySelector("#list");
 
-
-
-let taskArray;
-if (localStorage.tasks !== undefined || localStorage.tasks !== ""){
-    taskArray = JSON.parse(localStorage.tasks);
-} else {
-    taskArray = []
+async function getTasks(){
+    let response = await fetch("http://localhost:2345/");
+    let data = await response.json();
+    console.log(data)
+    data.forEach(data => {
+        taskArray.push(data.text)
+    })
+    updateTasks()
 }
+
+let taskArray = [];
+
 
 function updateTasks(){
     container.innerHTML = "";
-    localStorage.tasks = JSON.stringify(taskArray);
     taskArray.forEach(task => {
         createTask(task)
     });
 }
-
-updateTasks();
 
 function createTask(text){
     const newTask = document.createElement("div");
@@ -47,7 +48,7 @@ function createTask(text){
 
     newTask.appendChild(taskGrid);
 
-    // test
+    
     textCont.appendChild(taskText);
     textCont.appendChild(editInput);
     taskGrid.appendChild(textCont);
@@ -98,3 +99,5 @@ window.addEventListener("keydown", (e)=>{
         taskInput.value = "";
     }
 })
+
+getTasks();
